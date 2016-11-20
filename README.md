@@ -11,6 +11,7 @@ Na początku programu tworzona jest pewna ilość wątków żądających dostęp
     
 Dane wejściowe: maksymalna liczba żądań w kolejce,
                 lista plików wejściowych (zawierających w kolejnych liniach numery ścieżek dla danego wątku)
+                
 Wyjście: Każdy wątek wypisuje na wyjście odpowiedni komunikat, gdy konkretne żądanie jest gotowe do obsługi.
          Po obsłudze danego żądania, wątek obsługujący wypisuje na wyjście odpowiedni komunikat.
          
