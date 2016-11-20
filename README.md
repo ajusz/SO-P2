@@ -8,6 +8,7 @@
   
     Żądania z kolejki są obsługiwane w porządku  SSTF (shortest seek time first) - następne obsługiwane żądanie jest żądaniem dostępu do ścieżki najbliższej aktualnemu położeniu głowicy. Ścieżka początkowa to 0.
     
+    
     Dane wejściowe: maksymalna liczba żądań w kolejce,
                     lista plików wejściowych (zawierających w kolejnych liniach numery ścieżek dla danego wątku)
     Wyjście: Każdy wątek wypisuje na wyjście odpowiedni komunikat, gdy konkretne żądanie jest gotowe do obsługi.
