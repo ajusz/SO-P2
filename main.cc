@@ -71,11 +71,13 @@ void* requester(void *arg)
 	}
 	file.close();
 	sem_wait(&(request[d.threadnum]));	//wątek czeka aż ostatnie jego żądanie zostanie obsłużone
+	sem_wait(&queue_sec);
 	sem_wait(&living_sec);
 	num_of_living_rth--;	//zmniejszenie liczby żywych wątków
 	if(queue.size() == fabs(min(max_disk_queue, num_of_living_rth)))	//jeśli kolejka jest teraz pełna, planista jest budzony
 			sem_post(&full);
 	sem_post(&living_sec);
+	sem_post(&queue_sec);
 	return NULL;
 }
 
