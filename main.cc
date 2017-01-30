@@ -42,7 +42,8 @@ vector<data> queue;	//"kolejka" przechowująca żądania (numery wątków żąda
 void* requester(void *arg)
 {
 	Argument* a = (Argument*)arg;
-	int i = a->i;	
+	data d;
+	d.threadnum = a->i;	
 	string f = a->filename;
 	ifstream file;
 	file.open(f.c_str());	//otwarcie pliku, którego nazwa była przekazana przez argument
@@ -52,16 +53,14 @@ void* requester(void *arg)
 	}
 	int x;
 	file>>x;	//wczytanie pierwszego numeru ścieżki z pliku
-	data d;
-	d.threadnum = i;
 	while (!file.eof()) {
 		d.tracknum = x;
-		sem_wait(&(request[i]));	//wątek czeka aż poprzednie jego żądanie zostanie obsłużone
+		sem_wait(&(request[d.threadnum]));	//wątek czeka aż poprzednie jego żądanie zostanie obsłużone
 		sem_wait(&max_disk_queue_sec);	//wątek czeka aż "kolejka" nie będzie pełna
 		sem_wait(&queue_sec);	//sekcja krytyczna operacji na kolejce
 		queue.push_back(d);	//dodanie żądania do kolejki
 		sem_wait(&print);
-		cout<<"Żądanie wątku nr "<<i<<" dostępu do ścieżki "<<x<<endl;	//wypisanie odpowiedniego komunikatu
+		cout<<"Żądanie wątku nr "<<d.threadnum<<" dostępu do ścieżki "<<x<<endl;	//wypisanie odpowiedniego komunikatu
 		sem_post(&print);
 		sem_wait(&living_sec);
 		if(queue.size() == fabs(min(max_disk_queue, num_of_living_rth)))	//jeśli kolejka jest pełna, planista jest budzony
@@ -71,7 +70,7 @@ void* requester(void *arg)
 		file>>x;	//wczytanie kolejnego numeru ścieżki z pliku
 	}
 	file.close();
-	sem_wait(&(request[i]));	//wątek czeka aż ostatnie jego żądanie zostanie obsłużone
+	sem_wait(&(request[d.threadnum]));	//wątek czeka aż ostatnie jego żądanie zostanie obsłużone
 	sem_wait(&living_sec);
 	num_of_living_rth--;	//zmniejszenie liczby żywych wątków
 	if(queue.size() == fabs(min(max_disk_queue, num_of_living_rth)))	//jeśli kolejka jest teraz pełna, planista jest budzony
